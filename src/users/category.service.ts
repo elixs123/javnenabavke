@@ -77,7 +77,9 @@ export class CategoryService {
     }
 
     async findAll() {
-        return await this.categoryRepository.find();
+        return  this.categoryRepository.find(
+            
+        );
     }
 
     async searchCategories(term: string) {

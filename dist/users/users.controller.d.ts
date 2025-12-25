@@ -13,9 +13,7 @@ export declare class UsersController {
     remove(id: string): string;
     createCategory(): Promise<void>;
     findAllCategories(): Promise<import("./entities/categories.entity").Category[]>;
-    searchCategories(body: {
-        searchTerm: string;
-    }): Promise<import("./entities/categories.entity").Category[]>;
+    searchCategories(searchTerm: string): Promise<import("./entities/categories.entity").Category[]>;
     addCategoryToUser(body: {
         userId: number;
         categoryId: number;

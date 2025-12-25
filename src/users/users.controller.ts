@@ -47,14 +47,14 @@ export class UsersController {
     return this.categoyService.create();
   }
 
-  @Get('categories')
+  @Get('categories/all')
   findAllCategories() {
     return this.categoyService.findAll();
   }
 
-  @Get('categories/search')
-  searchCategories(@Body() body: {searchTerm: string}) {
-    return this.categoyService.searchCategories(body.searchTerm);
+  @Get('categories/search/:searchTerm')
+  searchCategories(@Param('searchTerm') searchTerm: string) {
+    return this.categoyService.searchCategories(searchTerm);
   }
 
   //Mapira usera za kategoriju

@@ -46,8 +46,8 @@ let UsersController = class UsersController {
     findAllCategories() {
         return this.categoyService.findAll();
     }
-    searchCategories(body) {
-        return this.categoyService.searchCategories(body.searchTerm);
+    searchCategories(searchTerm) {
+        return this.categoyService.searchCategories(searchTerm);
     }
     addCategoryToUser(body) {
         return this.categoyService.addCategoryToUser(body.userId, body.categoryId);
@@ -96,16 +96,16 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], UsersController.prototype, "createCategory", null);
 __decorate([
-    (0, common_1.Get)('categories'),
+    (0, common_1.Get)('categories/all'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], UsersController.prototype, "findAllCategories", null);
 __decorate([
-    (0, common_1.Get)('categories/search'),
-    __param(0, (0, common_1.Body)()),
+    (0, common_1.Get)('categories/search/:searchTerm'),
+    __param(0, (0, common_1.Param)('searchTerm')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
 ], UsersController.prototype, "searchCategories", null);
 __decorate([
