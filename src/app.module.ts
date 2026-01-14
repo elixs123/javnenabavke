@@ -1,9 +1,12 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { HttpModule } from '@nestjs/axios';
+import { HttpModule, HttpService } from '@nestjs/axios';
 import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { Tenders } from './users/entities/tenders.entity';
+import { User } from './users/entities/user.entity';
+import { AllTenders } from './users/entities/alltenders.entity';
 
 @Module({
   imports: [HttpModule, UsersModule, TypeOrmModule.forRoot({
@@ -19,7 +22,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       encrypt: false,
       trustServerCertificate: true
     },
-  })],
+  }), TypeOrmModule.forFeature([Tenders, User, AllTenders])],
   controllers: [AppController],
   providers: [AppService],
 })

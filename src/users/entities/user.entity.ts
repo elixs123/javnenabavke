@@ -1,5 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany, JoinColumn } from 'typeorm';
 import { UserToCategory } from './userToCategory.entity';
+import { Tenders } from './tenders.entity';
+import { AllTenders } from './alltenders.entity';
 
 @Entity('users')
 export class User {
@@ -17,4 +19,7 @@ export class User {
 
   @OneToMany(() => UserToCategory, (category) => category.user)
   category_id: UserToCategory[];
+
+  @OneToMany(() => AllTenders, tender => tender.user)
+  tenders: AllTenders[];
 }

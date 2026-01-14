@@ -31,9 +31,12 @@ export class UsersService {
       }
     );
   }
-
+  allUsers(){
+    return this.usersRepository.find();
+  }
+  
   findOne(id: number) {
-    return this.usersRepository.findOne({where: {id}});
+    return this.usersRepository.findOne({ where: {id}, relations: ['category_id', 'category_id.category'] });
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {

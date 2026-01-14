@@ -37,8 +37,11 @@ let UsersService = class UsersService {
             ],
         });
     }
+    allUsers() {
+        return this.usersRepository.find();
+    }
     findOne(id) {
-        return this.usersRepository.findOne({ where: { id } });
+        return this.usersRepository.findOne({ where: { id }, relations: ['category_id', 'category_id.category'] });
     }
     update(id, updateUserDto) {
         return `This action updates a #${id} user`;

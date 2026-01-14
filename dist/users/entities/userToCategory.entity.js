@@ -17,6 +17,7 @@ let UserToCategory = class UserToCategory {
     id;
     user;
     category;
+    categoryRoot;
     created_at;
 };
 exports.UserToCategory = UserToCategory;
@@ -32,6 +33,10 @@ __decorate([
     (0, typeorm_1.ManyToOne)(() => categories_entity_1.Category, (category) => category.id),
     __metadata("design:type", categories_entity_1.Category)
 ], UserToCategory.prototype, "category", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => categories_entity_1.Category, (category) => category.id),
+    __metadata("design:type", categories_entity_1.Category)
+], UserToCategory.prototype, "categoryRoot", void 0);
 __decorate([
     (0, typeorm_1.Column)({ default: () => 'GETDATE()' }),
     __metadata("design:type", Date)

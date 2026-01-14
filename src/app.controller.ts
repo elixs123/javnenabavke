@@ -7,6 +7,12 @@ export class AppController {
 
   @Get('test')
   getTest(): any {
+    //return this.appService.test();
     return this.appService.getLotMapCpv();
+  }
+
+  @Get('tenders')
+  getTenders(): any{
+    return this.appService.getAllTenders();
   }
 }

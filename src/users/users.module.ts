@@ -7,9 +7,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Category } from './entities/categories.entity';
 import { UserToCategory } from './entities/userToCategory.entity';
 import { HttpModule } from '@nestjs/axios';
+import { Tenders } from './entities/tenders.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Category, UserToCategory, CategoryService]), HttpModule],
+  imports: [TypeOrmModule.forFeature([User, Category, UserToCategory, CategoryService, Tenders]), HttpModule],
   controllers: [UsersController],
   providers: [UsersService, CategoryService],
 })

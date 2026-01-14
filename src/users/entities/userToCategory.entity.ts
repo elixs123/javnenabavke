@@ -12,6 +12,9 @@ export class UserToCategory {
 
   @ManyToOne(() => Category, (category) => category.id)
   category: Category;
+
+  @ManyToOne(() => Category, (category) => category.id)
+  categoryRoot: Category;
   
   @Column({ default: () => 'GETDATE()' })
   created_at: Date;

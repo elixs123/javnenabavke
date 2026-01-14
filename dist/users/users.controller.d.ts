@@ -8,10 +8,15 @@ export declare class UsersController {
     constructor(usersService: UsersService, categoyService: CategoryService);
     create(createUserDto: CreateUserDto): Promise<CreateUserDto & import("./entities/user.entity").User>;
     findAll(): Promise<import("./entities/user.entity").User[]>;
+    allUsers(): Promise<import("./entities/user.entity").User[]>;
     findOne(id: string): Promise<import("./entities/user.entity").User | null>;
     update(id: string, updateUserDto: UpdateUserDto): string;
     remove(id: string): string;
     createCategory(): Promise<void>;
+    removeCategory(body: {
+        userId: number;
+        cpvId: number;
+    }): Promise<import("typeorm").DeleteResult>;
     findAllCategories(): Promise<import("./entities/categories.entity").Category[]>;
     searchCategories(searchTerm: string): Promise<import("./entities/categories.entity").Category[]>;
     addCategoryToUser(body: {
@@ -22,4 +27,5 @@ export declare class UsersController {
         data: import("./entities/userToCategory.entity").UserToCategory;
         status: number;
     }>;
+    allTenders(userId: number): Promise<import("./entities/tenders.entity").Tenders[]>;
 }

@@ -24,6 +24,11 @@ export class UsersController {
 
   @Get()
   findAll() {
+    return this.usersService.allUsers();
+  }
+
+  @Get('with/categories')
+  allUsers() {
     return this.usersService.findAll();
   }
 
@@ -47,6 +52,11 @@ export class UsersController {
     return this.categoyService.create();
   }
 
+  @Delete('categories/remove')
+  removeCategory(@Body() body: {userId: number, cpvId: number}) {
+    return this.categoyService.removeOne(body.userId, body.cpvId);
+  }
+
   @Get('categories/all')
   findAllCategories() {
     return this.categoyService.findAll();
@@ -61,5 +71,10 @@ export class UsersController {
   @Post('add/category')
   addCategoryToUser(@Body() body: {userId: number, categoryId: number}) {
     return this.categoyService.addCategoryToUser(body.userId, body.categoryId);
+  }
+
+  @Get('tenders/all/:userId')
+  allTenders(@Param('userId') userId: number) {
+    return this.categoyService.allTenders(userId);
   }
 }

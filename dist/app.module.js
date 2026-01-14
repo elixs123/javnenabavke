@@ -13,6 +13,9 @@ const app_service_1 = require("./app.service");
 const axios_1 = require("@nestjs/axios");
 const users_module_1 = require("./users/users.module");
 const typeorm_1 = require("@nestjs/typeorm");
+const tenders_entity_1 = require("./users/entities/tenders.entity");
+const user_entity_1 = require("./users/entities/user.entity");
+const alltenders_entity_1 = require("./users/entities/alltenders.entity");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -31,7 +34,7 @@ exports.AppModule = AppModule = __decorate([
                     encrypt: false,
                     trustServerCertificate: true
                 },
-            })],
+            }), typeorm_1.TypeOrmModule.forFeature([tenders_entity_1.Tenders, user_entity_1.User, alltenders_entity_1.AllTenders])],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],
     })

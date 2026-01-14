@@ -12,12 +12,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = void 0;
 const typeorm_1 = require("typeorm");
 const userToCategory_entity_1 = require("./userToCategory.entity");
+const alltenders_entity_1 = require("./alltenders.entity");
 let User = class User {
     id;
     firstName;
     lastName;
     email;
     category_id;
+    tenders;
 };
 exports.User = User;
 __decorate([
@@ -40,6 +42,10 @@ __decorate([
     (0, typeorm_1.OneToMany)(() => userToCategory_entity_1.UserToCategory, (category) => category.user),
     __metadata("design:type", Array)
 ], User.prototype, "category_id", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => alltenders_entity_1.AllTenders, tender => tender.user),
+    __metadata("design:type", Array)
+], User.prototype, "tenders", void 0);
 exports.User = User = __decorate([
     (0, typeorm_1.Entity)('users')
 ], User);

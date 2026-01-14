@@ -29,6 +29,9 @@ let UsersController = class UsersController {
         return this.usersService.create(createUserDto);
     }
     findAll() {
+        return this.usersService.allUsers();
+    }
+    allUsers() {
         return this.usersService.findAll();
     }
     findOne(id) {
@@ -43,6 +46,9 @@ let UsersController = class UsersController {
     createCategory() {
         return this.categoyService.create();
     }
+    removeCategory(body) {
+        return this.categoyService.removeOne(body.userId, body.cpvId);
+    }
     findAllCategories() {
         return this.categoyService.findAll();
     }
@@ -51,6 +57,9 @@ let UsersController = class UsersController {
     }
     addCategoryToUser(body) {
         return this.categoyService.addCategoryToUser(body.userId, body.categoryId);
+    }
+    allTenders(userId) {
+        return this.categoyService.allTenders(userId);
     }
 };
 exports.UsersController = UsersController;
@@ -67,6 +76,12 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], UsersController.prototype, "findAll", null);
+__decorate([
+    (0, common_1.Get)('with/categories'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], UsersController.prototype, "allUsers", null);
 __decorate([
     (0, common_1.Get)(':id'),
     __param(0, (0, common_1.Param)('id')),
@@ -96,6 +111,13 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], UsersController.prototype, "createCategory", null);
 __decorate([
+    (0, common_1.Delete)('categories/remove'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], UsersController.prototype, "removeCategory", null);
+__decorate([
     (0, common_1.Get)('categories/all'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
@@ -115,6 +137,13 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], UsersController.prototype, "addCategoryToUser", null);
+__decorate([
+    (0, common_1.Get)('tenders/all/:userId'),
+    __param(0, (0, common_1.Param)('userId')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", void 0)
+], UsersController.prototype, "allTenders", null);
 exports.UsersController = UsersController = __decorate([
     (0, common_1.Controller)('users'),
     __metadata("design:paramtypes", [users_service_1.UsersService, category_service_1.CategoryService])

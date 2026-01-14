@@ -16,12 +16,13 @@ const typeorm_1 = require("@nestjs/typeorm");
 const categories_entity_1 = require("./entities/categories.entity");
 const userToCategory_entity_1 = require("./entities/userToCategory.entity");
 const axios_1 = require("@nestjs/axios");
+const tenders_entity_1 = require("./entities/tenders.entity");
 let UsersModule = class UsersModule {
 };
 exports.UsersModule = UsersModule;
 exports.UsersModule = UsersModule = __decorate([
     (0, common_1.Module)({
-        imports: [typeorm_1.TypeOrmModule.forFeature([user_entity_1.User, categories_entity_1.Category, userToCategory_entity_1.UserToCategory, category_service_1.CategoryService]), axios_1.HttpModule],
+        imports: [typeorm_1.TypeOrmModule.forFeature([user_entity_1.User, categories_entity_1.Category, userToCategory_entity_1.UserToCategory, category_service_1.CategoryService, tenders_entity_1.Tenders]), axios_1.HttpModule],
         controllers: [users_controller_1.UsersController],
         providers: [users_service_1.UsersService, category_service_1.CategoryService],
     })

@@ -21,16 +21,23 @@ const user_entity_1 = require("./entities/user.entity");
 const userToCategory_entity_1 = require("./entities/userToCategory.entity");
 const axios_1 = require("@nestjs/axios");
 const rxjs_1 = require("rxjs");
+const tenders_entity_1 = require("./entities/tenders.entity");
 let CategoryService = class CategoryService {
     categoryRepository;
     usersRepository;
     userToCategoryRepository;
+    userToCategory;
+    tendersRepository;
     httpService;
-    constructor(categoryRepository, usersRepository, userToCategoryRepository, httpService) {
+    dataSource;
+    constructor(categoryRepository, usersRepository, userToCategoryRepository, userToCategory, tendersRepository, httpService, dataSource) {
         this.categoryRepository = categoryRepository;
         this.usersRepository = usersRepository;
         this.userToCategoryRepository = userToCategoryRepository;
+        this.userToCategory = userToCategory;
+        this.tendersRepository = tendersRepository;
         this.httpService = httpService;
+        this.dataSource = dataSource;
     }
     async create() {
         let hasMore = false;
@@ -60,12 +67,25 @@ let CategoryService = class CategoryService {
     async addCategoryToUser(userId, categoryId) {
         const user = await this.usersRepository.findOne({ where: { id: userId } });
         const category = await this.categoryRepository.findOne({ where: { id: categoryId } });
+        const categoryRoot = await this.categoryRepository.findOne({ where: { id: category?.rootId } });
+        console.log(category?.rootId);
+        console.log(category);
         if (!category || !user) {
             throw new common_1.BadRequestException('Category or user not found');
+        }
+        const exists = await this.userToCategoryRepository.findOne({
+            where: {
+                user: { id: userId },
+                category: { id: categoryId },
+            },
+        });
+        if (exists) {
+            throw new common_1.BadRequestException('Category already assigned to user');
         }
         const userToCategory = new userToCategory_entity_1.UserToCategory();
         userToCategory.user = user;
         userToCategory.category = category;
+        userToCategory.categoryRoot = category.rootId ? categoryRoot : category;
         await this.userToCategoryRepository.save(userToCategory);
         return {
             message: 'Category added to user successfully',
@@ -81,6 +101,17 @@ let CategoryService = class CategoryService {
             .where('category.name LIKE :term OR category.code LIKE :term', { term: `%${term}%` })
             .getMany();
     }
+    async removeOne(userId, categoryId) {
+        return await this.dataSource
+            .createQueryBuilder()
+            .delete()
+            .from('user_to_category')
+            .where('userId = :userId AND categoryId = :categoryId', { userId, categoryId })
+            .execute();
+    }
+    async allTenders(userId) {
+        return await this.tendersRepository.find({ where: { userId: userId } });
+    }
 };
 exports.CategoryService = CategoryService;
 exports.CategoryService = CategoryService = __decorate([
@@ -88,9 +119,14 @@ exports.CategoryService = CategoryService = __decorate([
     __param(0, (0, typeorm_1.InjectRepository)(categories_entity_1.Category)),
     __param(1, (0, typeorm_1.InjectRepository)(user_entity_1.User)),
     __param(2, (0, typeorm_1.InjectRepository)(userToCategory_entity_1.UserToCategory)),
+    __param(3, (0, typeorm_1.InjectRepository)(userToCategory_entity_1.UserToCategory)),
+    __param(4, (0, typeorm_1.InjectRepository)(tenders_entity_1.Tenders)),
     __metadata("design:paramtypes", [typeorm_2.Repository,
         typeorm_2.Repository,
         typeorm_2.Repository,
-        axios_1.HttpService])
+        typeorm_2.Repository,
+        typeorm_2.Repository,
+        axios_1.HttpService,
+        typeorm_2.DataSource])
 ], CategoryService);
 //# sourceMappingURL=category.service.js.map

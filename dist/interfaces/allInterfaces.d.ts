@@ -29,11 +29,24 @@ export interface Lot {
     RecommendationResendDeadline: string | null;
     LastUpdated: string;
 }
+export interface IAllTender {
+    id: number;
+    externalId: number;
+    userId: number;
+    cpvCode: string;
+    ContractingAuthorityName: string;
+    ContractingAuthorityCityName: string;
+    ContractingAuthorityTaxNumber: string;
+    ContractingAuthorityAdministrativeUnitName: string;
+    name: string;
+    Announced: string;
+    number: string;
+}
 export interface CpvCodesResponse {
     value: CpvCode[];
 }
 export interface CpvCode {
-    id: number;
+    Id: number;
     LotId: number;
     CpvCodeId: number;
     IsMain: boolean;
