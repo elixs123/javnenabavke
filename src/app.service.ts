@@ -46,7 +46,6 @@ export class AppService {
     const response = await lastValueFrom(this.httpService.get<ProceduresResponse>(url));
     limit += 50;
 
-    console.log('doslo do tendera')
     for (let x = 0; x < response.data.value.length; x++) {
       if (response.data.value[x].Id == id) { //&& response.data.value[x].Type != 'DirectAgreement'
         hasMore = false;
@@ -57,8 +56,10 @@ export class AppService {
             userId: found.userId,
           },
         });
+        console.log("doslo do checka", check?.externalId)
 
         if (!check) {
+          console.log("insertujem tender", response.data.value[x].Id)
           const tenderToInsert = {
             externalId: response.data.value[x].Id,
             announced: response.data.value[x].Announced ? new Date(response.data.value[x].Announced as string) : null,
@@ -158,6 +159,7 @@ export class AppService {
 
 
     x.forEach(user => {
+      console.log()
       user.category_id.forEach(uc => {
         codes.push({userId: user.id, id: uc.category.CpvCodeId, code: uc.category.code, name: uc.category.name, rootCode: uc.category.rootCode? uc.category.rootCode : uc.category.code, rootId: uc.category.rootId});
       });
@@ -190,6 +192,7 @@ export class AppService {
 
     const todaysCpv = response.data.value.filter(cpv => {
       const cpvTime = new Date(cpv.LastUpdated).getTime();
+
       return cpvTime >= todayUTCStart && cpvTime < todayUTCEnd;
     });
 
@@ -211,12 +214,12 @@ export class AppService {
   async findByLotAndUserId(){
     let cpvCodes = await this.getCpvCodesByUser();
 
-    
-
     for (var x = 0; x < cpvCodes.length; x++) {
       for (var y = 0; y < this.allData.length; y++) {
-        if(cpvCodes[x].id == this.allData[y].CpvCodeId || cpvCodes[x].rootId == this.allData[y].CpvCodeId){
+        if(cpvCodes[x].id == this.allData[y].CpvCodeId){ //|| cpvCodes[x].rootId == this.allData[y].CpvCodeId
+          console.log("provjerava: " + cpvCodes[x].id + " i " + this.allData[y].CpvCodeId)
           await this.findProcedureIdByLotId(cpvCodes[x], this.allData[y]);
+          //continue;
         }
       }
     }
@@ -240,8 +243,11 @@ export class AppService {
       for (const lot of response.data.value) {
         
         //status  "Status": "Announced", za najavljene tendere
-        if (lot.Id === cpv.LotId ) { //&& lot.Status != 'Awarded'
-          await this.findProcudeById(found, cpv, lot.ProcedureId);
+        if (lot.Id === cpv.LotId) { //&& lot.Status != 'Awarded'
+          console.log("pronaso lot")
+          
+          await this.findProcudeByIdAnnounced(found, cpv, lot.ProcedureId);
+         // await this.findProcudeById(found, cpv, lot.ProcedureId);
           hasMore = false;
           break;
         }
@@ -261,6 +267,27 @@ export class AppService {
     }
   }
 
+  async findProcudeByIdAnnounced(found: any, cpv: any, procedureId: number): Promise<void> {
+    let limit = 0;
+
+    while (true) {
+      const url = `https://open.ejn.gov.ba/Procedures?$skip=${limit}&$orderby=id desc`;
+    
+      const response = await lastValueFrom(this.httpService.get<ProceduresResponse>(url));
+
+      if (!response.data.value.length) break;
+
+      for (const procedure of response.data.value) {
+        if (procedure.Id === procedureId) {
+          console.log("pronasao proceduru", procedureId)
+          await this.getTenders(found, cpv, procedureId);
+          return;
+        }
+      }
+
+      limit += 50;
+    }
+  }
 
   async findProcudeById(found: any, cpv: any, procedureId: number): Promise<void> {
     let limit = 0;
@@ -274,6 +301,7 @@ export class AppService {
 
       for (const procedure of response.data.value) {
         if (procedure.Id === procedureId) {
+          console.log("pronasao proceduru")
           await this.getTenders(found, cpv, procedureId);
           return;
         }

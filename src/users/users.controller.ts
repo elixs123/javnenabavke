@@ -69,8 +69,8 @@ export class UsersController {
 
   //Mapira usera za kategoriju
   @Post('add/category')
-  addCategoryToUser(@Body() body: {userId: number, categoryId: number}) {
-    return this.categoyService.addCategoryToUser(body.userId, body.categoryId);
+  addCategoryToUser(@Body() body: {userId: number, categoryId: number, rootAccepted: string}) {
+    return this.categoyService.addCategoryToUser(body.userId, body.categoryId, body.rootAccepted);
   }
 
   @Get('tenders/all/:userId')

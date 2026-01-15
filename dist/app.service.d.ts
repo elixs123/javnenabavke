@@ -26,5 +26,6 @@ export declare class AppService {
     getLotMapCpv(): Promise<void>;
     findByLotAndUserId(): Promise<void>;
     findProcedureIdByLotId(found: any, cpv: any): Promise<void>;
+    findProcudeByIdAnnounced(found: any, cpv: any, procedureId: number): Promise<void>;
     findProcudeById(found: any, cpv: any, procedureId: number): Promise<void>;
 }

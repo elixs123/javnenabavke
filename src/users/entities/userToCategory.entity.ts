@@ -13,8 +13,14 @@ export class UserToCategory {
   @ManyToOne(() => Category, (category) => category.id)
   category: Category;
 
-  @ManyToOne(() => Category, (category) => category.id)
-  categoryRoot: Category;
+  @Column({ type: 'int' })
+  categoryRootId: number;
+
+  @Column()
+  isMain: string;
+
+  // @ManyToOne(() => Category, (category) => category.rootId)
+  // categoryRoot: Category;
   
   @Column({ default: () => 'GETDATE()' })
   created_at: Date;

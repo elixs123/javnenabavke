@@ -14,9 +14,8 @@ export declare class CategoryService {
     private dataSource;
     constructor(categoryRepository: Repository<Category>, usersRepository: Repository<User>, userToCategoryRepository: Repository<UserToCategory>, userToCategory: Repository<UserToCategory>, tendersRepository: Repository<Tenders>, httpService: HttpService, dataSource: DataSource);
     create(): Promise<void>;
-    addCategoryToUser(userId: number, categoryId: number): Promise<{
+    addCategoryToUser(userId: number, categoryId: number, rootAccepted: string): Promise<{
         message: string;
-        data: UserToCategory;
         status: number;
     }>;
     findAll(): Promise<Category[]>;

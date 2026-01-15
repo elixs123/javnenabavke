@@ -4,6 +4,7 @@ export declare class UserToCategory {
     id: number;
     user: User;
     category: Category;
-    categoryRoot: Category;
+    categoryRootId: number;
+    isMain: string;
     created_at: Date;
 }

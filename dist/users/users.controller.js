@@ -56,7 +56,7 @@ let UsersController = class UsersController {
         return this.categoyService.searchCategories(searchTerm);
     }
     addCategoryToUser(body) {
-        return this.categoyService.addCategoryToUser(body.userId, body.categoryId);
+        return this.categoyService.addCategoryToUser(body.userId, body.categoryId, body.rootAccepted);
     }
     allTenders(userId) {
         return this.categoyService.allTenders(userId);

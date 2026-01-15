@@ -51,7 +51,6 @@ let AppService = class AppService {
             const url = 'https://open.ejn.gov.ba/Procedures?$skip=' + limit + '&$orderby=Id desc';
             const response = await (0, rxjs_1.lastValueFrom)(this.httpService.get(url));
             limit += 50;
-            console.log('doslo do tendera');
             for (let x = 0; x < response.data.value.length; x++) {
                 if (response.data.value[x].Id == id) {
                     hasMore = false;
@@ -61,7 +60,9 @@ let AppService = class AppService {
                             userId: found.userId,
                         },
                     });
+                    console.log("doslo do checka", check?.externalId);
                     if (!check) {
+                        console.log("insertujem tender", response.data.value[x].Id);
                         const tenderToInsert = {
                             externalId: response.data.value[x].Id,
                             announced: response.data.value[x].Announced ? new Date(response.data.value[x].Announced) : null,
@@ -153,6 +154,7 @@ let AppService = class AppService {
         });
         const codes = [];
         x.forEach(user => {
+            console.log();
             user.category_id.forEach(uc => {
                 codes.push({ userId: user.id, id: uc.category.CpvCodeId, code: uc.category.code, name: uc.category.name, rootCode: uc.category.rootCode ? uc.category.rootCode : uc.category.code, rootId: uc.category.rootId });
             });
@@ -194,7 +196,8 @@ let AppService = class AppService {
         let cpvCodes = await this.getCpvCodesByUser();
         for (var x = 0; x < cpvCodes.length; x++) {
             for (var y = 0; y < this.allData.length; y++) {
-                if (cpvCodes[x].id == this.allData[y].CpvCodeId || cpvCodes[x].rootId == this.allData[y].CpvCodeId) {
+                if (cpvCodes[x].id == this.allData[y].CpvCodeId) {
+                    console.log("provjerava: " + cpvCodes[x].id + " i " + this.allData[y].CpvCodeId);
                     await this.findProcedureIdByLotId(cpvCodes[x], this.allData[y]);
                 }
             }
@@ -213,7 +216,8 @@ let AppService = class AppService {
                 break;
             for (const lot of response.data.value) {
                 if (lot.Id === cpv.LotId) {
-                    await this.findProcudeById(found, cpv, lot.ProcedureId);
+                    console.log("pronaso lot");
+                    await this.findProcudeByIdAnnounced(found, cpv, lot.ProcedureId);
                     hasMore = false;
                     break;
                 }
@@ -228,6 +232,23 @@ let AppService = class AppService {
             limit += 1000;
         }
     }
+    async findProcudeByIdAnnounced(found, cpv, procedureId) {
+        let limit = 0;
+        while (true) {
+            const url = `https://open.ejn.gov.ba/Procedures?$skip=${limit}&$orderby=id desc`;
+            const response = await (0, rxjs_1.lastValueFrom)(this.httpService.get(url));
+            if (!response.data.value.length)
+                break;
+            for (const procedure of response.data.value) {
+                if (procedure.Id === procedureId) {
+                    console.log("pronasao proceduru", procedureId);
+                    await this.getTenders(found, cpv, procedureId);
+                    return;
+                }
+            }
+            limit += 50;
+        }
+    }
     async findProcudeById(found, cpv, procedureId) {
         let limit = 0;
         while (true) {
@@ -237,6 +258,7 @@ let AppService = class AppService {
                 break;
             for (const procedure of response.data.value) {
                 if (procedure.Id === procedureId) {
+                    console.log("pronasao proceduru");
                     await this.getTenders(found, cpv, procedureId);
                     return;
                 }

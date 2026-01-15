@@ -61,41 +61,80 @@ export class CategoryService {
         }
     }
 
-    async addCategoryToUser(userId: number, categoryId: number) {
+    async addCategoryToUser(userId: number, categoryId: number, rootAccepted: string) {
         const user = await this.usersRepository.findOne({where: {id: userId}});
 
         const category = await this.categoryRepository.findOne({where: {id: categoryId}});
 
-        const categoryRoot = await this.categoryRepository.findOne({where: {id: category?.rootId}});
-
-        console.log(category?.rootId)
-        console.log(category)
-        
         if(!category || !user){
             throw new BadRequestException('Category or user not found');
         }
 
-        const exists = await this.userToCategoryRepository.findOne({
-            where: {
-                user: { id: userId },
-                category: { id: categoryId },
-            },
-        });
-
-        if (exists) {
-            throw new BadRequestException('Category already assigned to user');
+        if(!category.rootId){
+            category.rootId = category.CpvCodeId;
+           // throw new BadRequestException('Root category not found');   
         }
 
-        const userToCategory = new UserToCategory();
-        userToCategory.user = user;
-        userToCategory.category = category;
-        userToCategory.categoryRoot = category.rootId ? categoryRoot! : category;
-        
-        await this.userToCategoryRepository.save(userToCategory);
+        const categoryRoot = await this.categoryRepository.find({where: [
+            {rootId: category.rootId},
+            {CpvCodeId: category.rootId}
+        ]});
+
+        if(rootAccepted == 'T'){
+            for(var x = 0; x < categoryRoot.length; x++){
+                const userToCategory = new UserToCategory();
+                userToCategory.user = user;
+                userToCategory.category = categoryRoot[x];
+                userToCategory.categoryRootId = categoryRoot[x].rootId? categoryRoot[x].rootId : categoryRoot[x].CpvCodeId;
+                if(categoryRoot[x].CpvCodeId == category.CpvCodeId){
+                    userToCategory.isMain = 'T';
+                }else{
+                    userToCategory.isMain = 'F';
+                }
+
+                const exists = await this.userToCategoryRepository.findOne({
+                    where: {
+                        user: { id: userId },
+                        category: { CpvCodeId: categoryRoot[x].CpvCodeId }
+                    },
+                });
+
+                if (exists) {
+                    throw new BadRequestException('Category already assigned to user');
+                }
+                
+                await this.userToCategoryRepository.save(userToCategory);
+            }
+        }else{
+            const userToCategory = new UserToCategory();
+            userToCategory.user = user;
+            userToCategory.category = category;
+            userToCategory.categoryRootId = category.rootId? category.rootId : category.CpvCodeId;
+            if(category.CpvCodeId == category.CpvCodeId){
+                userToCategory.isMain = 'T';
+            }else{
+                userToCategory.isMain = 'F';
+            }
+
+            const exists = await this.userToCategoryRepository.findOne({
+                where: {
+                    user: { id: userId },
+                    category: { CpvCodeId: category.CpvCodeId }
+                },
+            });
+
+            if (exists) {
+                throw new BadRequestException('Category already assigned to user');
+            }
+            
+            await this.userToCategoryRepository.save(userToCategory)
+            .catch((error) => {
+                console.log(error);
+            })
+        }
 
         return {
             message: 'Category added to user successfully',
-            data: userToCategory,
             status: 200
         };
     }

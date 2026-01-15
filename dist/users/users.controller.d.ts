@@ -22,9 +22,9 @@ export declare class UsersController {
     addCategoryToUser(body: {
         userId: number;
         categoryId: number;
+        rootAccepted: string;
     }): Promise<{
         message: string;
-        data: import("./entities/userToCategory.entity").UserToCategory;
         status: number;
     }>;
     allTenders(userId: number): Promise<import("./entities/tenders.entity").Tenders[]>;
