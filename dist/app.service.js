@@ -115,6 +115,7 @@ let AppService = class AppService {
                             lastUpdated: new Date(response.data.value[x].LastUpdated),
                             userId: found.userId,
                             cpvCode: found.code,
+                            vrijednost: await this.awards(response.data.value[x].Id) || undefined
                         };
                         const allTendersToInsert = {
                             externalId: response.data.value[x].Id,
@@ -244,6 +245,21 @@ let AppService = class AppService {
                     console.log("pronasao proceduru", procedureId);
                     await this.getTenders(found, cpv, procedureId);
                     return;
+                }
+            }
+            limit += 50;
+        }
+    }
+    async awards(procedureId) {
+        let limit = 0;
+        while (true) {
+            const url = `https://open.ejn.gov.ba/Awards?$skip=${limit}&$orderby=id desc`;
+            const response = await (0, rxjs_1.lastValueFrom)(this.httpService.get(url));
+            if (!response.data.value.length)
+                break;
+            for (const award of response.data.value) {
+                if (award.ProcedureId === procedureId) {
+                    return award.Value;
                 }
             }
             limit += 50;

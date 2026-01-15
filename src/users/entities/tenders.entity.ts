@@ -180,6 +180,9 @@ export class Tenders {
   @Column({ type: 'varchar', nullable: true })
   cpvCode: string;
 
+  @Column({ type: 'int', nullable: true  })
+  vrijednost: number
+
   @ManyToOne(() => User, user => user.tenders, { eager: false})
   @JoinColumn({ name: 'userId' })
   user: User

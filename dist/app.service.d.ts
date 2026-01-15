@@ -27,5 +27,6 @@ export declare class AppService {
     findByLotAndUserId(): Promise<void>;
     findProcedureIdByLotId(found: any, cpv: any): Promise<void>;
     findProcudeByIdAnnounced(found: any, cpv: any, procedureId: number): Promise<void>;
+    awards(procedureId: number): Promise<number | void>;
     findProcudeById(found: any, cpv: any, procedureId: number): Promise<void>;
 }

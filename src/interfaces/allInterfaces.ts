@@ -46,6 +46,66 @@ export interface IAllTender {
   number: string;
 }
 
+export interface AwardsResponse {
+  value: Awards[];
+}
+
+export interface Awards {
+  Id: number;
+  LotName: string | null;
+  Value: number;
+  ContractDate: string; // ISO string
+  ContractingAuthorityId: number;
+  ContractingAuthorityName: string;
+  ContractingAuthorityTaxNumber: string;
+  ContractingAuthorityCityName: string;
+  ContractingAuthorityType: string;
+  ContractingAuthorityActivityTypeName: string;
+  ContractingAuthorityAdministrativeUnitType: string;
+  ContractingAuthorityAdministrativeUnitName: string;
+  ProcedureId: number;
+  ProcedureName: string;
+  ProcedureNumber: string;
+  ProcedureType: string;
+  ContractType: string;
+  ContractCategoryName: string;
+  ContractSubcategoryName: string | null;
+  HasLots: boolean;
+  IsAuctionOnline: boolean;
+  IsMasterAgreement: boolean;
+  IsDefenseAndSecurity: boolean;
+  IsJointProcurement: boolean;
+  IsOnBehalfProcurement: boolean;
+  AwardCriterion: string | null;
+  NoticeId: number | null;
+  NoticeNumber: string | null;
+  AdditionalInformation: string | null;
+  AllowedSubcontracting: boolean;
+  AnnualValue: number | null;
+  CompletedWithNegotiation: boolean;
+  EuFundsUsed: boolean;
+  HighestAcceptableOfferValue: number | null;
+  IsContractConcluded: boolean;
+  LegalRemediesUsed: boolean;
+  LowestAcceptableOfferValue: number | null;
+  MonthlyValue: number | null;
+  NumberOfAcceptableOffers: number;
+  NumberOfReceivedOffers: number;
+  PreferentialTreatmentUsed: boolean;
+  PriorAnnouncementNumber: string | null;
+  PriorAnnouncementId: number | null;
+  ReasonsForNegotiatedProcedure: string | null;
+  RegulationQuoteId: number | null;
+  RegulationQuoteName: string | null;
+  SubcontractingShare: number | null;
+  SubcontractingShortDescription: string | null;
+  SubcontractingValue: number | null;
+  MasterAgreementEndDate: string | null; // ISO string
+  MasterAgreementStartDate: string | null; // ISO string
+  LastUpdated: string; // ISO string
+}
+
+
 export interface CpvCodesResponse {
   value: CpvCode[];
 }

@@ -3,7 +3,7 @@ import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { lastValueFrom, Subject } from 'rxjs';
 import { Tenders } from './users/entities/tenders.entity';
-import { CpvCode, CpvCodesResponse, LotsResponse, Procedure, ProceduresResponse } from './interfaces/allInterfaces';
+import { AwardsResponse, CpvCode, CpvCodesResponse, LotsResponse, Procedure, ProceduresResponse } from './interfaces/allInterfaces';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './users/entities/user.entity';
@@ -112,6 +112,7 @@ export class AppService {
             lastUpdated: new Date(response.data.value[x].LastUpdated),
             userId: found.userId,
             cpvCode: found.code,
+            vrijednost: await this.awards(response.data.value[x].Id) || undefined
           };
 
           const allTendersToInsert = {
@@ -282,6 +283,26 @@ export class AppService {
           console.log("pronasao proceduru", procedureId)
           await this.getTenders(found, cpv, procedureId);
           return;
+        }
+      }
+
+      limit += 50;
+    }
+  }
+
+  async awards(procedureId: number): Promise<number | void> {
+    let limit = 0;
+
+    while (true) {
+      const url = `https://open.ejn.gov.ba/Awards?$skip=${limit}&$orderby=id desc`;
+    
+      const response = await lastValueFrom(this.httpService.get<AwardsResponse>(url));
+
+      if (!response.data.value.length) break;
+
+      for (const award of response.data.value) {
+        if (award.ProcedureId === procedureId) {
+          return award.Value;
         }
       }
 
